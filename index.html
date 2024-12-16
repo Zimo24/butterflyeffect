@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorenz System with 1000 Points</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        // Initialize canvas
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Lorenz system parameters
+        const sigma = 10;
+        const rho = 28;
+        const beta = 8 / 3;
+
+        // Number of points
+        const numPoints = 1000;
+
+        // Array to hold point objects
+        let points = [];
+
+        // Lorenz system equation
+        function lorenz(x, y, z, dt) {
+            const dx = sigma * (y - x);
+            const dy = x * (rho - z) - y;
+            const dz = x * y - beta * z;
+            return {
+                dx: dx * dt,
+                dy: dy * dt,
+                dz: dz * dt
+            };
+        }
+
+        // Initialize the points with slightly different starting positions
+        function initPoints() {
+            for (let i = 0; i < numPoints; i++) {
+                points.push({
+                    x: Math.random() * 0.0001, // Slightly different starting x
+                    y: Math.random() * 0.0001, // Slightly different starting y
+                    z: Math.random() * 0.0001, // Slightly different starting z
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`
+                });
+            }
+        }
+
+        // Update the points based on the Lorenz system
+        function updatePoints(dt) {
+            points.forEach(point => {
+                const { dx, dy, dz } = lorenz(point.x, point.y, point.z, dt);
+                point.x += dx;
+                point.y += dy;
+                point.z += dz;
+            });
+        }
+
+        // Draw the points on the canvas
+        function drawPoints() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            points.forEach(point => {
+                const screenX = (point.x + 25) * canvas.width / 50;
+                const screenY = (point.y + 25) * canvas.height / 50;
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, 1, 0, 2 * Math.PI);
+                ctx.fillStyle = point.color;
+                ctx.fill();
+            });
+        }
+
+        // Main animation loop
+        function animate() {
+            const dt = 0.01;
+            updatePoints(dt);
+            drawPoints();
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize points and start animation
+        initPoints();
+        animate();
+    </script>
+</body>
+</html>
