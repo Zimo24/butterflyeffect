@@ -74,8 +74,8 @@
         function drawPoints() {
             ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
             points.forEach(point => {
-                const screenX = (point.x + 25);
-                const screenY = (point.z + 25);
+                const screenX = (point.x + 25)*100;
+                const screenY = (point.z + 25*100);
                 ctx.beginPath();
                 ctx.arc(screenX, screenY, 1, 0, 2 * Math.PI);
                 ctx.fillStyle = point.color;
